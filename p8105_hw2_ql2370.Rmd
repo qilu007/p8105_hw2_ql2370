@@ -32,6 +32,37 @@ data_2018 = janitor::clean_names(data_2018)
 data_2018 = data_2018%>% drop_na(date)
 data_2018 = data_2018 %>% replace_na(list(year = "2018"))
 
+```
+
+
+```{r}
+# get data from 2018-2014
+preci_2014 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2014 Precipitation", range = "A2:B14")
+
+preci_2014 = preci_2014[order(preci_2014$Month, decreasing = TRUE),]
+
+# 2015
+preci_2015 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2015 Precipitation", range = "A2:B14")
+
+preci_2015 = preci_2015[order(preci_2015$Month, decreasing = TRUE),]
+
+#2016
+preci_2016 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2016 Precipitation", range = "A2:B14")
+
+preci_2016 = preci_2016[order(preci_2016$Month, decreasing = TRUE),]
+
+#2017
+preci_2017 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", range = "A2:B14")
+
+preci_2017 = preci_2017[order(preci_2017$Month, decreasing = TRUE),]
+
+#2018
+preci_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2018 Precipitation", range = "A2:B14")
+
+preci_2018 = preci_2018[order(preci_2018$Month, decreasing = TRUE),]
+
+#merge them
+
 
 ```
 
