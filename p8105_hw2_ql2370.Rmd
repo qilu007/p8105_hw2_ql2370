@@ -19,7 +19,7 @@ library(readxl)
 sheet_data = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N336")
 sheet_data = janitor::clean_names(sheet_data)
 sheet_data = na.omit(sheet_data, cols("dumpster"))
-sheet_data$sports_balls = as.integer(sheet_data$sports_balls)
+sheet_data$sports_balls = as.integer(round(sheet_data$sports_balls))
 ```
 
 
@@ -62,9 +62,27 @@ preci_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", shee
 preci_2018 = preci_2018[order(preci_2018$Month, decreasing = TRUE),]
 
 #merge them
+join_data = full_join(preci_2015,preci_2014, by = c("Month"))
 
+join_data = full_join(preci_2016, join_data, by = c("Month"))
+join_data = full_join(preci_2017, join_data, by = c("Month"))
+join_data = full_join(preci_2018, join_data, by = c("Month"))
+
+names(join_data) = c("Month", "2018", "2017", "2016", "2015", "2014")
+join_data$Month = month.name
 
 ```
+
+For the analysis part, we can know the total precipitation in 2018 was
+```{r}
+total_2018 = replace_na(preci_2018$Total, 0)
+sum(total_2018)
+```
+the median number of sports balls in a dumpster in 2017 is
+```{r}
+
+```
+
 
 ## Including Plots
 
