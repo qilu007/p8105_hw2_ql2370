@@ -11,9 +11,11 @@ library(tidyverse)
 library(readxl)
 ```
 
-## R Markdown
+## HW2
 
+#Problem 1
 
+First, I read data from datasets
 ```{r cars}
 # read data and omit Mr. Trash sheet
 sheet_data = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N336")
@@ -25,64 +27,102 @@ sheet_data$sports_balls = as.integer(round(sheet_data$sports_balls))
 
 ```{r}
 # read 2018 and 2017 data
-data_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Professor Trash Wheel", range = "A2:N54")
-data_2018 = janitor::clean_names(data_2018)
+data_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2018 Precipitation", range = "A2:B14") %>%
+  mutate(year = "2018")
 
+data_2018 = data_2018%>% drop_na(Total)
 
-data_2018 = data_2018%>% drop_na(date)
-data_2018 = data_2018 %>% replace_na(list(year = "2018"))
+data_2017 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", range = "A2:B14") %>%
+  mutate(year = "2017")
+
+data_2017 = data_2017%>% drop_na(Total)
 
 ```
 
 
 ```{r}
-# get data from 2018-2014
-preci_2014 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2014 Precipitation", range = "A2:B14")
-
-preci_2014 = preci_2014[order(preci_2014$Month, decreasing = TRUE),]
-
-# 2015
-preci_2015 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2015 Precipitation", range = "A2:B14")
-
-preci_2015 = preci_2015[order(preci_2015$Month, decreasing = TRUE),]
-
-#2016
-preci_2016 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2016 Precipitation", range = "A2:B14")
-
-preci_2016 = preci_2016[order(preci_2016$Month, decreasing = TRUE),]
-
-#2017
-preci_2017 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", range = "A2:B14")
-
-preci_2017 = preci_2017[order(preci_2017$Month, decreasing = TRUE),]
-
-#2018
-preci_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2018 Precipitation", range = "A2:B14")
-
-preci_2018 = preci_2018[order(preci_2018$Month, decreasing = TRUE),]
 
 #merge them
-join_data = full_join(preci_2015,preci_2014, by = c("Month"))
+join_data = full_join(data_2018,data_2017, by = c("Month"))
 
-join_data = full_join(preci_2016, join_data, by = c("Month"))
-join_data = full_join(preci_2017, join_data, by = c("Month"))
-join_data = full_join(preci_2018, join_data, by = c("Month"))
-
-names(join_data) = c("Month", "2018", "2017", "2016", "2015", "2014")
+names(join_data) = c("Month", "Total", "Year", "Total", "Year")
 join_data$Month = month.name
 
 ```
 
-For the analysis part, we can know the total precipitation in 2018 was
+For the analysis part,
+the number of observation of dumpsters we saw in 2017 was
 ```{r}
-total_2018 = replace_na(preci_2018$Total, 0)
+count_data_2017 = filter(sheet_data, year == 2017)
+length(count_data_2017$dumpster)
+```
+the number of observation of dumpsters we saw in 2018 was
+```{r}
+count_data_2018 = filter(sheet_data, year == 2018)
+length(count_data_2018$dumpster)
+```
+The number of dumpsters' observation increased.
+  
+Also, we can know the total precipitation in 2018 was
+```{r}
+total_2018 = replace_na(data_2018$Total, 0)
 sum(total_2018)
 ```
-the median number of sports balls in a dumpster in 2017 is
+  
+the median number of sports balls in a dumpster in 2017 was
 ```{r}
-
+median_data_2017 = filter(sheet_data, year == 2017)
+median(median_data_2017$sports_balls)
 ```
 
+  
+the median number of sports balls in a dumpster in 2018 was
+```{r}
+median_data_2018 = filter(sheet_data, year == 2018)
+median(median_data_2018$sports_balls)
+```
+we saw a significantly decrease.
+  
+Finally, the total number of weights in 2017 was
+```{r}
+total_wei_2017 = filter(sheet_data, year == 2017)
+sum(total_wei_2017$weight_tons)
+```
+
+the total number of weights in 2018 was
+```{r}
+total_wei_2018 = filter(sheet_data, year == 2018)
+sum(total_wei_2018$weight_tons)
+```
+the total weight we observed increased from 2017 to 2018.
+
+And the total volume cubic yard in 2017 is
+```{r}
+total_vol_2017 = filter(sheet_data, year == 2017)
+sum(total_vol_2017$volume_cubic_yards)
+```
+the total volume cubic yard in 2018 is
+```{r}
+total_vol_2018 = filter(sheet_data, year == 2018)
+sum(total_vol_2018$volume_cubic_yards)
+```
+an increase was observered on the total cubic yard as well as the total weight.
+  
+The average of the weight per dumpster carrying in 2017 was
+```{r}
+sum(total_wei_2017$weight_tons)/length(count_data_2017$dumpster)
+
+```
+  
+The average of the weight per dumpster carrying in 2018 was
+```{r}
+sum(total_wei_2018$weight_tons)/length(count_data_2018$dumpster)
+
+```
+From the figures above, we can observe that some type of items that dumpsters caught was changed a little bit, but the total amount of items and the total volume increased. Also, the weight per dumpster carrying in 2018 is higher than that of 2017. 
+  
+  
+#Problem 2
 
 ## Including Plots
 
