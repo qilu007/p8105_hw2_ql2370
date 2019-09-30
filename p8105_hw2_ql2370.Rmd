@@ -124,6 +124,15 @@ From the figures above, we can observe that some type of items that dumpsters ca
   
 #Problem 2
 
+```{r}
+pols_month = read_csv(file = "./data/pols-month.csv")
+pols_month = separate(pols_month, mon, c ("year", "month", "day"))
+# ??????pols_month$month = month.name(as.Date(pols_month$month))
+
+  
+```
+
+
 ## Including Plots
 
 
