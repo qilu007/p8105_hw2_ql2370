@@ -157,7 +157,6 @@ snp_data = separate(snp_data, date, c ("month", "day", "year")) %>%
     month = as.numeric(month),
     month = month.abb[month],)
   
-
 snp_data<- snp_data[,c("year", "month", "close")]
 ```
 
@@ -178,16 +177,22 @@ names(unemployment) = c("year", "month", "unemployment")
 
 ```
 
-merge 
+merge step
 ```{r}
 snp_data = snp_data[order(snp_data$month, decreasing = FALSE),]
 snp_data = snp_data[order(snp_data$year, decreasing = FALSE),]
 
+
 join_data = right_join(pols_month, snp_data)
+
 unemployment$year = as.character(unemployment$year)
+
 join_data = right_join(join_data, unemployment, by = c("year", "month"))
 ```
-
+  
+In the above datasets, pols_month contains the number of national politicians who are democratic or republican at any given time; snp_data contanis Standard & Poor’s stock market index (S&P) at any given time; unempolyment contains percentages of unemployment in different months of the associated year. After merging snp into pols, the joint dataset is one more column that contains the close snp than the pols before. Then, merging unemployment into the result, which can provide the percentage of unemployment at given time. 
+  
+    
 ## Including Plots
 
 
