@@ -192,7 +192,57 @@ join_data = right_join(join_data, unemployment, by = c("year", "month"))
   
 In the above datasets, pols_month contains the number of national politicians who are democratic or republican at any given time; snp_data contanis Standard & Poor’s stock market index (S&P) at any given time; unempolyment contains percentages of unemployment in different months of the associated year. After merging snp into pols, the joint dataset is one more column that contains the close snp than the pols before. Then, merging unemployment into the result, which can provide the percentage of unemployment at given time. 
   
-    
+#Problem 3
+
+```{r}
+baby_name = read_csv(file = "./data/Popular_Baby_Names.csv")
+baby_name = janitor::clean_names(baby_name)
+baby_name$childs_first_name = tolower(baby_name$childs_first_name)
+
+# Remove duplicate rows of the dataframe using cyl and vs variables
+baby_name = distinct(baby_name, year_of_birth, gender, childs_first_nameethnicity, count, rank, .keep_all= TRUE)
+
+baby_name$ethnicity[baby_name$ethnicity == "BLACK NON HISP"] <- "BLACK NON HISPANIC"
+baby_name$ethnicity[baby_name$ethnicity == "WHITE NON HISP"] <- "WHITE NON HISPANIC"
+
+# select olivia
+olivia_data = filter(baby_name, childs_first_name == "olivia") %>%
+  select(-gender, -childs_first_name, -count)
+
+
+olivia_data = pivot_wider(
+  olivia_data, 
+  names_from = "year_of_birth", 
+  values_from = "rank")
+
+olivia_data
+```
+
+```{r}
+male_name = filter(baby_name, gender == "MALE" , rank == "1") %>% 
+  select(-gender, -count) 
+
+
+male_name = pivot_wider(
+  male_name,
+  names_from = "year_of_birth",
+  values_from = "rank"
+)
+male_name
+```
+
+
+```{r}
+plot_data = filter(baby_name, gender == "MALE", year_of_birth == "2016", ethnicity == "WHITE NON HISPANIC")
+
+polt_df = ggplot(plot_data, aes(x= rank, y = count)) +
+  geom_point(aes(color = childs_first_name, alpha = .5)) +
+  geom_smooth(se = FALSE)
+
+polt_df
+```
+
+
 ## Including Plots
 
 
