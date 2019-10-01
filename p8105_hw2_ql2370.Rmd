@@ -230,7 +230,9 @@ male_name = pivot_wider(
 )
 male_name
 ```
-
+  
+  
+Plot part
 
 ```{r}
 plot_data = filter(baby_name, gender == "MALE", year_of_birth == "2016", ethnicity == "WHITE NON HISPANIC")
@@ -242,12 +244,4 @@ polt_df = ggplot(plot_data, aes(x= rank, y = count)) +
 polt_df
 ```
 
-
-## Including Plots
-
-
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
