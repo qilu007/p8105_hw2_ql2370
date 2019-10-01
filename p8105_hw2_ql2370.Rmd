@@ -18,7 +18,7 @@ library(readxl)
 First, I read data from datasets
 ```{r cars}
 # read data and omit Mr. Trash sheet
-sheet_data = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N336")
+sheet_data = read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N408")
 sheet_data = janitor::clean_names(sheet_data)
 sheet_data = na.omit(sheet_data, cols("dumpster"))
 sheet_data$sports_balls = as.integer(round(sheet_data$sports_balls))
@@ -27,12 +27,12 @@ sheet_data$sports_balls = as.integer(round(sheet_data$sports_balls))
 
 ```{r}
 # read 2018 and 2017 data
-data_2018 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2018 Precipitation", range = "A2:B14") %>%
+data_2018 = read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2018 Precipitation", range = "A2:B14") %>%
   mutate(year = "2018")
 
 data_2018 = data_2018%>% drop_na(Total)
 
-data_2017 = read_excel("data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", range = "A2:B14") %>%
+data_2017 = read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2017 Precipitation", range = "A2:B14") %>%
   mutate(year = "2017")
 
 data_2017 = data_2017%>% drop_na(Total)
@@ -183,11 +183,11 @@ snp_data = snp_data[order(snp_data$month, decreasing = FALSE),]
 snp_data = snp_data[order(snp_data$year, decreasing = FALSE),]
 
 
-join_data = right_join(pols_month, snp_data)
+join_data = left_join(pols_month, snp_data)
 
 unemployment$year = as.character(unemployment$year)
 
-join_data = right_join(join_data, unemployment, by = c("year", "month"))
+join_data = left_join(join_data, unemployment, by = c("year", "month"))
 ```
   
 In the above datasets, pols_month contains the number of national politicians who are democratic or republican at any given time; snp_data contanis Standard & Poor’s stock market index (S&P) at any given time; unempolyment contains percentages of unemployment in different months of the associated year. After merging snp into pols, the joint dataset is one more column that contains the close snp than the pols before. Then, merging unemployment into the result, which can provide the percentage of unemployment at given time. 
