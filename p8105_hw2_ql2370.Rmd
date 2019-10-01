@@ -234,12 +234,22 @@ male_name
   
 Plot part
 
-```{r}
+```{r, fig.height=10}
 plot_data = filter(baby_name, gender == "MALE", year_of_birth == "2016", ethnicity == "WHITE NON HISPANIC")
 
 polt_df = ggplot(plot_data, aes(x= rank, y = count)) +
   geom_point(aes(color = childs_first_name, alpha = .5)) +
-  geom_smooth(se = FALSE)
+  geom_smooth(se = FALSE) +
+  labs(
+    title = "Rank vs. Count",
+    x = "Rank",
+    y = "Number of children with a name") + 
+  viridis::scale_color_viridis(
+    name = "childs first name", 
+    discrete = TRUE
+  ) +
+  theme(legend.position = "bottom")
+
 
 polt_df
 ```
